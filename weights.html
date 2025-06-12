@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Portfolio Weights Table</title>
+    <style>
+        body {
+            font-family: Arial;
+            margin: 20px;
+        }
+        h2 {
+            color: #333;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            font-size: 14px;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 6px 10px;
+            text-align: center;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        tr:hover td {
+            background-color: #eef;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Portfolio Weights Table</h2>
+<div id="table-container">
+    Loading table...
+</div>
+
+<script>
+    fetch('weights.csv')
+        .then(response => response.text())
+        .then(csv => {
+            const lines = csv.trim().split('\n');
+            const headers = lines[0].split(',');
+
+            let table = '<table><thead><tr>';
+            headers.forEach(h => table += `<th>${h}</th>`);
+            table += '</tr></thead><tbody>';
+
+            for (let i = 1; i < lines.length; i++) {
+                const row = lines[i].split(',');
+                table += '<tr>';
+                row.forEach(cell => table += `<td>${isNaN(cell) ? cell : parseFloat(cell).toFixed(4)}</td>`);
+                table += '</tr>';
+            }
+
+            table += '</tbody></table>';
+            document.getElementById('table-container').innerHTML = table;
+        })
+        .catch(error => {
+            document.getElementById('table-container').innerText = 'Error loading table: ' + error;
+        });
+</script>
+
+</body>
+</html>
